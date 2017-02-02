@@ -2,6 +2,7 @@
 
 Features:
  * Inline Assembly: Show useful error message if trying to access calldata variables.
+ * Type checker: Warn when builtin symbols (e.g. ``keccak256``, ``msg``, etc.) are overridden.
 
 Bugfixes:
  * Type Checker: Fix invalid "specify storage keyword" warning for reference members of structs.
