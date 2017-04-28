@@ -40,6 +40,7 @@
 #include <libsolidity/interface/ABI.h>
 #include <libsolidity/interface/Natspec.h>
 #include <libsolidity/interface/GasEstimator.h>
+#include <libsolidity/codegen/ir/IRGenerate.h>
 
 #include <libevmasm/Exceptions.h>
 
@@ -313,6 +314,18 @@ void CompilerStack::link()
 		contract.second.runtimeObject.link(m_libraries);
 		contract.second.cloneObject.link(m_libraries);
 	}
+}
+
+AssemblyStack const CompilerStack::assemblyStack() const
+{
+	/// TODO: return an assembly for each contract
+	IRGenerate ir;
+	for (Source const* source: m_sourceOrder)
+		ir.process(*source->ast);
+	AssemblyStack stack;
+	/// TODO: set scanner
+	stack.analyze(ir.body());
+	return stack;
 }
 
 eth::AssemblyItems const* CompilerStack::assemblyItems(string const& _contractName) const

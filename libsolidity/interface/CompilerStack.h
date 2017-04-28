@@ -37,6 +37,7 @@
 #include <libevmasm/LinkerObject.h>
 #include <libsolidity/interface/ErrorReporter.h>
 #include <libsolidity/interface/ReadFile.h>
+#include <libsolidity/interface/AssemblyStack.h>
 
 namespace dev
 {
@@ -136,6 +137,9 @@ public:
 	/// Parses and compiles the given source code.
 	/// @returns false on error.
 	bool compile(std::string const& _sourceCode, bool _optimize = false, unsigned _runs = 200);
+
+	/// @returns the assembly stack of the IR of a contract.
+	AssemblyStack const assemblyStack() const;
 
 	/// @returns the assembled object for a contract.
 	eth::LinkerObject const& object(std::string const& _contractName = "") const;
