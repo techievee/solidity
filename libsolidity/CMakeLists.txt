@@ -12,7 +12,7 @@ aux_source_directory(../libjulia SRC_LIST)
 
 set(EXECUTABLE solidity)
 
-file(GLOB HEADERS "*/*.h" "../libjulia/backends/evm/*")
+file(GLOB HEADERS "*/*.h" "../libjulia/backends/evm/*" "../libjulia/backends/webassembly/*")
 
 include_directories(BEFORE ..)
 add_library(${EXECUTABLE} ${SRC_LIST} ${HEADERS})
