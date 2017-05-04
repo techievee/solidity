@@ -14,6 +14,7 @@ project(solidity VERSION ${PROJECT_VERSION})
 # Let's find our dependencies
 include(EthDependencies)
 include(deps/jsoncpp.cmake)
+include(ProjectBinaryen)
 
 # Figure out what compiler and system are we using
 include(EthCompilerSettings)
