@@ -139,7 +139,7 @@ public:
 	bool compile(std::string const& _sourceCode, bool _optimize = false, unsigned _runs = 200);
 
 	/// @returns the assembly stack of the IR of a contract.
-	AssemblyStack const assemblyStack() const;
+	AssemblyStack const assemblyStack(std::string const& _contractName) const;
 
 	/// @returns the assembled object for a contract.
 	eth::LinkerObject const& object(std::string const& _contractName = "") const;
