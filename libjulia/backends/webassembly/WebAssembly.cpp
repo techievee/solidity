@@ -78,6 +78,8 @@ public:
 	}
 	void operator()(assembly::Literal const& _literal)
 	{
+		solAssert(!m_onRoot, "Statements are only allowed within functions.");
+
 		if (_literal.kind == assembly::LiteralKind::Number)
 			output.add("(" + convertType(_literal.type) + ".const " + _literal.value + ")");
 		else if (_literal.kind == assembly::LiteralKind::Boolean)
@@ -87,10 +89,14 @@ public:
 	}
 	void operator()(assembly::Identifier const& _identifier)
 	{
+		solAssert(!m_onRoot, "Statements are only allowed within functions.");
+
 		output.add("(get_local $" + _identifier.name + ")");
 	}
 	void operator()(assembly::VariableDeclaration const& _varDecl)
 	{
+		solAssert(!m_onRoot, "Statements are only allowed within functions.");
+
 		solAssert(_varDecl.variables.size() == 1, "Tuples not supported yet.");
 		output.addLine("(local $" + _varDecl.variables.front().name + " " + convertType(_varDecl.variables.front().type) + ")");
 		output.addLine("(set_local $" + _varDecl.variables.front().name + " ");
@@ -102,6 +108,8 @@ public:
 	}
 	void operator()(assembly::Assignment const& _assignment)
 	{
+		solAssert(!m_onRoot, "Statements are only allowed within functions.");
+
 		output.addLine("(set_local $" + _assignment.variableName.name + " ");
 		output.indent();
 		boost::apply_visitor(*this, *_assignment.value);
@@ -111,6 +119,9 @@ public:
 	}
 	void operator()(assembly::FunctionDefinition const& _funDef)
 	{
+		solAssert(m_onRoot, "Embededd functions are not supported.");
+
+		m_onRoot = false;
 		output.newLine();
 		output.addLine("(func $" + _funDef.name + " ");
 		output.indent();
@@ -135,9 +146,12 @@ public:
 		output.unindent();
 		output.addLine(")");
 		output.newLine();
+		m_onRoot = true;
 	}
 	void operator()(assembly::FunctionCall const& _funCall)
 	{
+		solAssert(!m_onRoot, "Statements are only allowed within functions.");
+
 		if (resolveBuiltinFunction(_funCall))
 			return;
 
@@ -154,6 +168,8 @@ public:
 	}
 	void operator()(assembly::Switch const& _switch)
 	{
+		solAssert(!m_onRoot, "Statements are only allowed within functions.");
+
 		solAssert(_switch.cases.size() <= 2, "");
 		/// One of the cases must be the default case
 		solAssert(
@@ -190,6 +206,8 @@ public:
 	}
 	void operator()(assembly::Block const& _block)
 	{
+		solAssert(!m_onRoot, "Statements are only allowed within functions.");
+
 		output.add("(block ");
 		output.indent();
 		visitStatements(_block);
@@ -266,6 +284,7 @@ private:
 	}
 
 	IndentedWriter output;
+	bool m_onRoot = true;
 };
 
 string julia::WebAssembly::assemble(assembly::Block const& _block)
