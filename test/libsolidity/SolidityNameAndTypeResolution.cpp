@@ -6195,6 +6195,75 @@ BOOST_AUTO_TEST_CASE(implicit_conversion_disallowed)
 	CHECK_ERROR(text, TypeError, "Return argument type uint32 is not implicitly convertible to expected type (type of first return variable) bytes4.");
 }
 
+BOOST_AUTO_TEST_CASE(function_types_sig)
+{
+	char const* text = R"(
+		contract C {
+			function f() returns (bytes4) {
+				return f.sig;
+			}
+		}
+	)";
+	CHECK_ERROR(text, TypeError, "Member \"sig\" not found");
+	text = R"(
+		contract C {
+			function g() internal {
+			}
+			function f() returns (bytes4) {
+				return g.sig;
+			}
+		}
+	)";
+	CHECK_ERROR(text, TypeError, "Member \"sig\" not found");
+	text = R"(
+		contract C {
+			function f() returns (bytes4) {
+				function () g;
+				return g.sig;
+			}
+		}
+	)";
+	CHECK_ERROR(text, TypeError, "Member \"sig\" not found");
+	text = R"(
+		contract C {
+			function f() returns (bytes4) {
+				return this.f.sig;
+			}
+		}
+	)";
+	CHECK_SUCCESS_NO_WARNINGS(text);
+	text = R"(
+		contract C {
+			function f() external returns (bytes4) {
+				return this.f.sig;
+			}
+		}
+	)";
+	CHECK_SUCCESS_NO_WARNINGS(text);
+	text = R"(
+		contract C {
+			function h() external {
+			}
+			function f() external returns (bytes4) {
+				var g = this.h;
+				return g.sig;
+			}
+		}
+	)";
+	CHECK_SUCCESS_NO_WARNINGS(text);
+	text = R"(
+		contract C {
+			function h() external {
+			}
+			function f() external returns (bytes4) {
+				function () external g = this.h;
+				return g.sig;
+			}
+		}
+	)";
+	CHECK_SUCCESS_NO_WARNINGS(text);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 }

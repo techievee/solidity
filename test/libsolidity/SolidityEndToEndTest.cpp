@@ -9723,6 +9723,19 @@ BOOST_AUTO_TEST_CASE(multi_modifiers)
 	BOOST_CHECK(callContractFunction("x()") == encodeArgs(u256(12)));
 }
 
+BOOST_AUTO_TEST_CASE(function_types_sig)
+{
+	char const* sourceCode = R"(
+		contract C {
+			function f() returns (bytes4) {
+				return this.f.sig;
+			}
+		}
+	)";
+	compileAndRun(sourceCode, 0, "C");
+	BOOST_CHECK(callContractFunction("f()") == fromHex("0x26121ff0"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 }
