@@ -1,7 +1,7 @@
 ### 0.4.14 (unreleased)
 
 Features:
- * Code Generator: Added ``.sig`` member on external function types to retrieve their signature.
+ * Code Generator: Added ``.selector`` member on external function types to retrieve their signature.
 
 Bugfixes:
  * Type Checker: Fix invalid "specify storage keyword" warning for reference members of structs.
