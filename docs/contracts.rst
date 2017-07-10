@@ -213,6 +213,8 @@ In the following example, ``D``, can call ``c.getData()`` to retrieve the value 
 
 ::
 
+    // This will not compile
+
     pragma solidity ^0.4.0;
 
     contract C {
@@ -773,12 +775,16 @@ seen in the following example::
 
     pragma solidity ^0.4.0;
 
+    contract owned {
+        function owned() { owner = msg.sender; }
+        address owner;
+    }
+
     contract mortal is owned {
         function kill() {
             if (msg.sender == owner) selfdestruct(owner);
         }
     }
-
 
     contract Base1 is mortal {
         function kill() { /* do cleanup 1 */ mortal.kill(); }
@@ -799,6 +805,11 @@ derived override, but this function will bypass
 ``Base1``.  The way around this is to use ``super``::
 
     pragma solidity ^0.4.0;
+
+    contract owned {
+        function owned() { owner = msg.sender; }
+        address owner;
+    }
 
     contract mortal is owned {
         function kill() {
@@ -879,6 +890,8 @@ error "Linearization of inheritance graph impossible".
 
 ::
 
+    // This will not compile
+
     pragma solidity ^0.4.0;
 
     contract X {}
@@ -914,7 +927,9 @@ Contract functions can lack an implementation as in the following example (note 
         function utterance() returns (bytes32);
     }
 
-Such contracts cannot be compiled (even if they contain implemented functions alongside non-implemented functions), but they can be used as base contracts::
+    // Such contracts cannot be compiled (even if they contain
+    // implemented functions alongside non-implemented functions),
+    // but they can be used as base contracts::
 
     pragma solidity ^0.4.0;
 

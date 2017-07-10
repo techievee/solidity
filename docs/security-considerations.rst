@@ -179,11 +179,7 @@ Never use tx.origin for authorization. Let's say you have a wallet contract like
         }
     }
 
-Now someone tricks you into sending ether to the address of this attack wallet:
-
-::
-
-    pragma solidity ^0.4.0;
+    // Now someone tricks you into sending ether to the address of this attack wallet:
 
     contract TxAttackWallet {
         address owner;
