@@ -16,7 +16,7 @@ file(GLOB HEADERS "*/*.h" "../libjulia/backends/evm/*")
 
 include_directories(BEFORE ..)
 add_library(${EXECUTABLE} ${SRC_LIST} ${HEADERS})
-target_link_libraries(${EXECUTABLE} z3)
+target_link_libraries(${EXECUTABLE})
 
 eth_use(${EXECUTABLE} REQUIRED Dev::soldevcore Solidity::solevmasm)
 

@@ -246,7 +246,7 @@ bool CompilerStack::analyze()
 
 	if (noErrors)
 	{
-		SMTChecker smtChecker(m_errorReporter);
+		SMTChecker smtChecker(m_errorReporter, m_readFile);
 		for (Source const* source: m_sourceOrder)
 			smtChecker.analyze(*source->ast);
 	}
