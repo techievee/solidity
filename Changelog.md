@@ -2,6 +2,7 @@
 
 Features:
  * Inline Assembly: Show useful error message if trying to access calldata variables.
+ * Type Checker: Include types in explicit conversion error message.
 
 Bugfixes:
  * Type Checker: Fix invalid "specify storage keyword" warning for reference members of structs.
