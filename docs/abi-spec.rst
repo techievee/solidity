@@ -17,6 +17,8 @@ We assume the Application Binary Interface (ABI) is strongly typed, known at com
 
 This specification does not address contracts whose interface is dynamic or otherwise known only at run-time. Should these cases become important they can be adequately handled as facilities built within the Ethereum ecosystem.
 
+.. _abi_function_selector:
+
 Function Selector
 =================
 
