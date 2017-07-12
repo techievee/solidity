@@ -2,6 +2,7 @@
 
 Features:
  * Inline Assembly: Show useful error message if trying to access calldata variables.
+ * Metadata: Only include files which were used to compile the given contract.
 
 Bugfixes:
  * Type Checker: Fix invalid "specify storage keyword" warning for reference members of structs.
