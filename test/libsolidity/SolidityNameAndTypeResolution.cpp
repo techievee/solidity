@@ -6209,6 +6209,31 @@ BOOST_AUTO_TEST_CASE(implicit_conversion_disallowed)
 	CHECK_ERROR(text, TypeError, "Return argument type uint32 is not implicitly convertible to expected type (type of first return variable) bytes4.");
 }
 
+BOOST_AUTO_TEST_CASE()
+{
+	char const* text = R"(
+		contract C {
+			function f(uint[85678901234] a) external {
+			}
+		}
+	)";
+	CHECK_ERROR(text, TypeError, "Array is too large to be encoded as calldata.");
+	char const* text = R"(
+		contract C {
+			function f(uint[85678901234] a) internal {
+			}
+		}
+	)";
+	CHECK_SUCCESS_NO_WARNINGS(text);
+	char const* text = R"(
+		contract C {
+			function f(uint[85678901234] a) {
+			}
+		}
+	)";
+	CHECK_SUCCESS_NO_WARNINGS(text);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 }
