@@ -84,6 +84,17 @@ SourceUnitAnnotation& SourceUnit::annotation() const
 	return dynamic_cast<SourceUnitAnnotation&>(*m_annotation);
 }
 
+std::vector<SourceUnit const*> SourceUnit::referencedSourceUnits() const
+{
+	std::vector<SourceUnit const*> sourceUnits;
+	for (auto const& node: nodes())
+	{
+		if (auto const* importDirective = dynamic_cast<ImportDirective const*>(node.get()))
+			sourceUnits.push_back(importDirective->annotation().sourceUnit);
+	}
+	return sourceUnits;
+}
+
 SourceUnit const& Declaration::sourceUnit() const
 {
 	solAssert(!!m_scope, "");
