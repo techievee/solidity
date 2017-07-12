@@ -590,6 +590,12 @@ void DeclarationRegistrationHelper::closeCurrentScope()
 void DeclarationRegistrationHelper::registerDeclaration(Declaration& _declaration, bool _opensScope)
 {
 	solAssert(m_currentScope && m_scopes.count(m_currentScope), "No current scope.");
+	vector<Declaration const*> shadowedDeclarations;
+	if (!_declaration.name().empty())
+		shadowedDeclarations = m_scopes[m_currentScope]->resolveName(_declaration.name(), true);
+	bool scopeCanContainCode =
+		!dynamic_cast<StructDefinition const*>(m_currentScope) &&
+		!dynamic_cast<StructDefinition const*>(m_currentScope);
 	if (!m_scopes[m_currentScope]->registerDeclaration(_declaration, nullptr, !_declaration.isVisibleInContract()))
 	{
 		SourceLocation firstDeclarationLocation;
@@ -613,6 +619,26 @@ void DeclarationRegistrationHelper::registerDeclaration(Declaration& _declaratio
 			SecondarySourceLocation().append("The previous declaration is here:", firstDeclarationLocation),
 			"Identifier already declared."
 		);
+	}
+	else if (scopeCanContainCode && !shadowedDeclarations.empty())
+	{
+		Declaration const* decl = shadowedDeclarations.front();
+		if (dynamic_cast<MagicVariableDeclaration const*>(decl))
+		{
+			m_errorReporter.warning(
+				_declaration.location(),
+				"This declaration shadows a builtin symbol."
+			);
+		}
+		else
+		{
+			auto shadowedLocation = shadowedDeclarations.front()->location();
+			m_errorReporter.warning(
+				_declaration.location(),
+				"This declaration shadows an existing declaration.",
+				SecondarySourceLocation().append("The shadowed declaration is here:", shadowedLocation)
+			);
+		}
 	}
 
 	_declaration.setScope(m_currentScope);
