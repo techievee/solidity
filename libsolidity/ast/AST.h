@@ -131,8 +131,8 @@ public:
 
 	std::vector<ASTPointer<ASTNode>> nodes() const { return m_nodes; }
 
-	/// @returns a vector of referenced SourceUnits.
-	std::vector<SourceUnit const*> referencedSourceUnits() const;
+	/// @returns a set of referenced SourceUnits. Flattens them if @a _flatten is true.
+	std::set<SourceUnit const*> referencedSourceUnits(bool _flatten = false) const;
 
 private:
 	std::vector<ASTPointer<ASTNode>> m_nodes;
