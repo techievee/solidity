@@ -6173,26 +6173,6 @@ BOOST_AUTO_TEST_CASE(shadowing_builtins_with_events)
 	CHECK_WARNING(text, "shadows a builtin symbol");
 }
 
-BOOST_AUTO_TEST_CASE(shadowing_builtins_with_imports)
-{
-	char const* text = R"(
-		import * as msg from "B.sol";
-		contract C {
-		}
-	)";
-	CHECK_WARNING(text, "shadows a builtin symbol");
-}
-
-BOOST_AUTO_TEST_CASE(shadowing_builtins_with_multiple_imports)
-{
-	char const* text = R"(
-		import {msg, block} from "B.sol";
-		contract C {
-		}
-	)";
-	CHECK_WARNING(text, "shadows a builtin symbol");
-}
-
 BOOST_AUTO_TEST_CASE(shadowing_builtins_ignores_struct)
 {
 	char const* text = R"(
