@@ -84,18 +84,23 @@ SourceUnitAnnotation& SourceUnit::annotation() const
 	return dynamic_cast<SourceUnitAnnotation&>(*m_annotation);
 }
 
-std::set<SourceUnit const*> SourceUnit::referencedSourceUnits(bool _flatten) const
+std::set<SourceUnit const*> SourceUnit::referencedSourceUnits(bool _flatten, std::set<SourceUnit const*> _skipList) const
 {
 	std::set<SourceUnit const*> sourceUnits;
 	for (auto const& node: nodes())
 	{
 		if (auto const* importDirective = dynamic_cast<ImportDirective const*>(node.get()))
 		{
-			sourceUnits.insert(importDirective->annotation().sourceUnit);
-			if (_flatten)
+			auto annotation = importDirective->annotation();
+			sourceUnits.insert(annotation.sourceUnit);
+			if (!_skipList.count(annotation.sourceUnit))
 			{
-				std::set<SourceUnit const*> referencedSourceUnits = importDirective->annotation().sourceUnit->referencedSourceUnits(true);
-				sourceUnits.insert(referencedSourceUnits.begin(), referencedSourceUnits.end());
+				_skipList.insert(annotation.sourceUnit);
+				if (_flatten)
+				{
+					std::set<SourceUnit const*> referencedSourceUnits = annotation.sourceUnit->referencedSourceUnits(true, _skipList);
+					sourceUnits.insert(referencedSourceUnits.begin(), referencedSourceUnits.end());
+				}
 			}
 		}
 	}

@@ -132,7 +132,7 @@ public:
 	std::vector<ASTPointer<ASTNode>> nodes() const { return m_nodes; }
 
 	/// @returns a set of referenced SourceUnits. Flattens them if @a _flatten is true.
-	std::set<SourceUnit const*> referencedSourceUnits(bool _flatten = false) const;
+	std::set<SourceUnit const*> referencedSourceUnits(bool _flatten = false, std::set<SourceUnit const*> _skipList = std::set<SourceUnit const*>()) const;
 
 private:
 	std::vector<ASTPointer<ASTNode>> m_nodes;
